@@ -1,6 +1,6 @@
 package com.galanjulio.monitor;
 
-import com.galanjulio.monitor.threads.NotificationThread;
+import com.galanjulio.monitor.threads.ReplyThread;
 import lombok.Getter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -95,7 +95,7 @@ public class Monitor {
     }
 
     private void startThread() {
-        new NotificationThread(this).start();
+        new ReplyThread(this).start();
     }
 
     public String getString(String setting) {

@@ -9,7 +9,7 @@ import twitter4j.TwitterException;
 
 import java.util.List;
 
-public class NotificationThread extends Thread {
+public class ReplyThread extends Thread {
 
     private Twitter twitter;
     private String handle;
@@ -17,7 +17,7 @@ public class NotificationThread extends Thread {
 
     private Status currentStatus;
 
-    public NotificationThread(Monitor main) {
+    public ReplyThread(Monitor main) {
         setName("Monitor - Reply Thread");
 
         twitter = main.getTwitter();
