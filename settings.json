@@ -1,0 +1,8 @@
+{
+  "consumer_key": "EXTRACTED",
+  "consumer_key_secret": "EXTRACTED",
+  "access_token": "EXTRACTED",
+  "access_token_secret": "EXTRACTED",
+  "handle_to_track": "@some_handle",
+  "tweet_reply": "some reply here"
+}
