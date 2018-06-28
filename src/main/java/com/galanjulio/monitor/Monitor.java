@@ -40,10 +40,11 @@ public class Monitor {
     }
 
     private void setupSettings() {
-        File file = new File("settings.json");
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("settings.json").getFile());
 
         if (!file.exists()) {
-            Main.log("Could not find file 'options.json' please make sure it exists!");
+            Main.log("Could not find file 'settings.json' please make sure it exists!");
             return;
         }
 

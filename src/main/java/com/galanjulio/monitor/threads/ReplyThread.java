@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ReplyThread extends Thread {
 
+    private static final int TIMEOUT_RETRY_SECONDS = 15;
+
     private Twitter twitter;
     private String handle;
     private String reply;
@@ -38,17 +40,27 @@ public class ReplyThread extends Thread {
                 tweets = twitter.getUserTimeline(handle);
             } catch (TwitterException e) {
                 Main.log("Could not retrieve " + handle + "'s timeline: " + e.getErrorMessage());
-                e.printStackTrace();
+                Main.log("Pausing for " + TIMEOUT_RETRY_SECONDS + " seconds then retrying.");
+
+                sleep(TIMEOUT_RETRY_SECONDS);
                 return;
             }
 
-            Status tweet = tweets.get(0);
+            int index = 0;
+
+            // We don't want to reply to retweets
+            while (tweets.get(index).isRetweet()) {
+                index++;
+            }
+
+            Status tweet = tweets.get(index);
 
             if (!tweet.isRetweet()) {
                 if (currentStatus == null) {
                     currentStatus = tweet;
 
                     Main.log("Found new tweet: \"" + tweet.getText() + "\"");
+                    Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
                 } else {
                     if (currentStatus.getId() != tweet.getId()) {
                         replyToTweet(tweet);
@@ -56,24 +68,32 @@ public class ReplyThread extends Thread {
                 }
             }
 
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(1);
         }
     }
 
-    private void replyToTweet(Status status) {
-        StatusUpdate statusUpdate = new StatusUpdate(reply);
-        statusUpdate.setInReplyToStatusId(status.getId());
+    private void replyToTweet(Status tweet) {
+        StatusUpdate statusUpdate = new StatusUpdate(handle + " " + reply.trim());
+        statusUpdate.setInReplyToStatusId(tweet.getId());
 
         try {
             twitter.updateStatus(statusUpdate);
 
             Main.log("Reply sent to: " + handle);
+            Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
         } catch (TwitterException e) {
             Main.log("Could not send tweet: " + e.getErrorMessage());
+            e.printStackTrace();
+            return;
+        }
+
+        currentStatus = tweet;
+    }
+
+    private void sleep(int seconds) {
+        try {
+            Thread.sleep(seconds * 1000);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
