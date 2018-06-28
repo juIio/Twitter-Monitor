@@ -10,9 +10,12 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,8 +43,8 @@ public class Monitor {
     }
 
     private void setupSettings() {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("settings.json").getFile());
+        String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "settings.json";
+        File file = new File(path);
 
         if (!file.exists()) {
             Main.log("Could not find file 'settings.json' please make sure it exists!");
@@ -88,8 +91,23 @@ public class Monitor {
 
     private void openDebugFrame() {
         JFrame frame = new JFrame();
+
+        JTextArea textArea = new JTextArea(24, 80);
+        textArea.setBackground(Color.BLACK);
+        textArea.setForeground(Color.LIGHT_GRAY);
+        textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        System.setOut(new PrintStream(new OutputStream() {
+            @Override
+            public void write(int b) {
+                textArea.append(String.valueOf((char) b));
+            }
+        }));
+        textArea.setLocation(300, 1);
+        textArea.setSize(textArea.getPreferredSize());
+        frame.add(textArea);
+
         frame.setLocationRelativeTo(null);
-        frame.setSize(200, 200);
+        frame.setSize(850, 500);
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.toFront();

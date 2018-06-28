@@ -73,7 +73,7 @@ public class ReplyThread extends Thread {
     }
 
     private void replyToTweet(Status tweet) {
-        StatusUpdate statusUpdate = new StatusUpdate(handle + " " + reply.trim());
+        StatusUpdate statusUpdate = new StatusUpdate(handle + " " + reply);
         statusUpdate.setInReplyToStatusId(tweet.getId());
 
         try {
