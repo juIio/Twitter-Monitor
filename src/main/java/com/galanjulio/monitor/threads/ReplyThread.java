@@ -55,16 +55,14 @@ public class ReplyThread extends Thread {
 
             Status tweet = tweets.get(index);
 
-            if (!tweet.isRetweet()) {
-                if (currentStatus == null) {
-                    currentStatus = tweet;
+            if (currentStatus == null) {
+                currentStatus = tweet;
 
-                    Main.log("Found new tweet: \"" + tweet.getText() + "\"");
-                    Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
-                } else {
-                    if (currentStatus.getId() != tweet.getId()) {
-                        replyToTweet(tweet);
-                    }
+                Main.log("Found new tweet: \"" + tweet.getText() + "\"");
+                Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
+            } else {
+                if (currentStatus.getId() != tweet.getId()) {
+                    replyToTweet(tweet);
                 }
             }
 
