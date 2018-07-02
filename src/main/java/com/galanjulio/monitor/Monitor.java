@@ -22,7 +22,7 @@ import java.util.Map;
 @Getter
 public class Monitor {
 
-    private static final boolean DEBUG_MODE = false;
+    private static final boolean DEBUG_MODE = true;
 
     private Map<String, Object> settings = new HashMap<>();
 
@@ -90,21 +90,22 @@ public class Monitor {
     }
 
     private void openDebugFrame() {
-        JFrame frame = new JFrame();
+        JFrame frame = new JFrame(Main.TITLE + " - " + Main.VERSION);
 
         JTextArea textArea = new JTextArea(24, 80);
         textArea.setBackground(Color.BLACK);
         textArea.setForeground(Color.LIGHT_GRAY);
         textArea.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
+        textArea.setLocation(300, 1);
+        textArea.setSize(textArea.getPreferredSize());
+        frame.add(textArea);
+
         System.setOut(new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
                 textArea.append(String.valueOf((char) b));
             }
         }));
-        textArea.setLocation(300, 1);
-        textArea.setSize(textArea.getPreferredSize());
-        frame.add(textArea);
 
         frame.setLocationRelativeTo(null);
         frame.setSize(850, 500);

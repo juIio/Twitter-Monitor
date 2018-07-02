@@ -17,7 +17,7 @@ public class ReplyThread extends Thread {
     private String handle;
     private String reply;
 
-    private Status currentStatus;
+    private Status currentTweet;
 
     public ReplyThread(Monitor main) {
         setName("Monitor - Reply Thread");
@@ -55,13 +55,13 @@ public class ReplyThread extends Thread {
 
             Status tweet = tweets.get(index);
 
-            if (currentStatus == null) {
-                currentStatus = tweet;
+            if (currentTweet == null) {
+                currentTweet = tweet;
 
                 Main.log("Found new tweet: \"" + tweet.getText() + "\"");
                 Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
             } else {
-                if (currentStatus.getId() != tweet.getId()) {
+                if (currentTweet.getId() != tweet.getId()) {
                     replyToTweet(tweet);
                 }
             }
@@ -78,6 +78,8 @@ public class ReplyThread extends Thread {
             twitter.updateStatus(statusUpdate);
 
             Main.log("Reply sent to: " + handle);
+            Main.log("Tweet: \"" + tweet.getText() + "\"");
+            Main.log("Reply: " + reply);
             Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
         } catch (TwitterException e) {
             Main.log("Could not send tweet: " + e.getErrorMessage());
@@ -85,7 +87,7 @@ public class ReplyThread extends Thread {
             return;
         }
 
-        currentStatus = tweet;
+        currentTweet = tweet;
     }
 
     private void sleep(int seconds) {
