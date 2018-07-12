@@ -42,7 +42,10 @@ public class ReplyThread extends Thread {
                 Main.log("Could not retrieve " + handle + "'s timeline: " + e.getErrorMessage());
                 Main.log("Pausing for " + TIMEOUT_RETRY_SECONDS + " seconds then retrying.");
 
-                sleep(TIMEOUT_RETRY_SECONDS);
+                try {
+                    sleep(TIMEOUT_RETRY_SECONDS * 1000);
+                } catch (InterruptedException ignored) {
+                }
                 return;
             }
 
@@ -66,7 +69,10 @@ public class ReplyThread extends Thread {
                 }
             }
 
-            sleep(1);
+            try {
+                sleep(1000);
+            } catch (InterruptedException ignored) {
+            }
         }
     }
 
@@ -88,13 +94,5 @@ public class ReplyThread extends Thread {
         }
 
         currentTweet = tweet;
-    }
-
-    private void sleep(int seconds) {
-        try {
-            Thread.sleep(seconds * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 }
