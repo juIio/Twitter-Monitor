@@ -34,7 +34,7 @@ public class ReplyThread extends Thread {
     @Override
     public void run() {
         while (true) {
-            List<Status> tweets;
+            List<Status> tweets = null;
 
             try {
                 tweets = twitter.getUserTimeline(handle);
@@ -46,33 +46,34 @@ public class ReplyThread extends Thread {
                     sleep(TIMEOUT_RETRY_SECONDS * 1000);
                 } catch (InterruptedException ignored) {
                 }
-                return;
             }
 
-            int index = 0;
+           if (tweets != null) {
+               int index = 0;
 
-            // We don't want to reply to retweets
-            while (tweets.get(index).isRetweet()) {
-                index++;
-            }
+               // We don't want to reply to retweets
+               while (tweets.get(index).isRetweet()) {
+                   index++;
+               }
 
-            Status tweet = tweets.get(index);
+               Status tweet = tweets.get(index);
 
-            if (currentTweet == null) {
-                currentTweet = tweet;
+               if (currentTweet == null) {
+                   currentTweet = tweet;
 
-                Main.log("Found new tweet: \"" + tweet.getText() + "\"");
-                Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
-            } else {
-                if (currentTweet.getId() != tweet.getId()) {
-                    replyToTweet(tweet);
-                }
-            }
+                   Main.log("Found new tweet: \"" + tweet.getText() + "\"");
+                   Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
+               } else {
+                   if (currentTweet.getId() != tweet.getId()) {
+                       replyToTweet(tweet);
+                   }
+               }
 
-            try {
-                sleep(1000);
-            } catch (InterruptedException ignored) {
-            }
+               try {
+                   sleep(1000);
+               } catch (InterruptedException ignored) {
+               }
+           }
         }
     }
 
@@ -86,7 +87,7 @@ public class ReplyThread extends Thread {
             Main.log("Reply sent to: " + handle);
             Main.log("Tweet: \"" + tweet.getText() + "\"");
             Main.log("Reply: " + reply);
-            Main.log("Link: https://twitter.com/" + handle.substring(1, handle.length()) + "/status/" + tweet.getId());
+            Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
         } catch (TwitterException e) {
             Main.log("Could not send tweet: " + e.getErrorMessage());
             e.printStackTrace();

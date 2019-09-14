@@ -22,7 +22,7 @@ import java.util.Map;
 @Getter
 public class Monitor {
 
-    private static final boolean DEBUG_MODE = true;
+    private static final boolean DEBUG_MODE = false;
 
     private Map<String, Object> settings = new HashMap<>();
 
@@ -43,8 +43,7 @@ public class Monitor {
     }
 
     private void setupSettings() {
-        String path = "src" + File.separator + "main" + File.separator + "resources" + File.separator + "settings.json";
-        File file = new File(path);
+        File file = new File("settings.json");
 
         if (!file.exists()) {
             Main.log("Could not find file 'settings.json' please make sure it exists!");
