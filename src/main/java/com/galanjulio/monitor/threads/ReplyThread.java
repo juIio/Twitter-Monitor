@@ -64,7 +64,7 @@ public class ReplyThread extends Thread {
 
                    Main.log("Found new tweet: \"" + tweet.getText() + "\"");
                    Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
-                   Main.log(" ");
+                   System.out.println(" ");
                } else {
                    if (currentTweet.getId() != tweet.getId()) {
                        replyToTweet(tweet);
@@ -90,10 +90,10 @@ public class ReplyThread extends Thread {
             Main.log("Tweet: \"" + tweet.getText() + "\"");
             Main.log("Reply: " + reply);
             Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
-            Main.log(" ");
+            System.out.println(" ");
         } catch (TwitterException e) {
             Main.log("Could not send tweet: " + e.getErrorMessage());
-            Main.log(" ");
+            System.out.println(" ");
             e.printStackTrace();
             return;
         }
