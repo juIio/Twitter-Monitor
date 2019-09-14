@@ -41,6 +41,7 @@ public class ReplyThread extends Thread {
             } catch (TwitterException e) {
                 Main.log("Could not retrieve " + handle + "'s timeline: " + e.getErrorMessage());
                 Main.log("Pausing for " + TIMEOUT_RETRY_SECONDS + " seconds then retrying.");
+                Main.log(" ");
 
                 try {
                     sleep(TIMEOUT_RETRY_SECONDS * 1000);
@@ -63,6 +64,7 @@ public class ReplyThread extends Thread {
 
                    Main.log("Found new tweet: \"" + tweet.getText() + "\"");
                    Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
+                   Main.log(" ");
                } else {
                    if (currentTweet.getId() != tweet.getId()) {
                        replyToTweet(tweet);
@@ -88,8 +90,10 @@ public class ReplyThread extends Thread {
             Main.log("Tweet: \"" + tweet.getText() + "\"");
             Main.log("Reply: " + reply);
             Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
+            Main.log(" ");
         } catch (TwitterException e) {
             Main.log("Could not send tweet: " + e.getErrorMessage());
+            Main.log(" ");
             e.printStackTrace();
             return;
         }
