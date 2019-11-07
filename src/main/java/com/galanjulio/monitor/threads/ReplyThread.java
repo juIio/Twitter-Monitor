@@ -41,7 +41,7 @@ public class ReplyThread extends Thread {
             } catch (TwitterException e) {
                 Main.log("Could not retrieve " + handle + "'s timeline: " + e.getErrorMessage());
                 Main.log("Pausing for " + TIMEOUT_RETRY_SECONDS + " seconds then retrying.");
-                Main.log(" ");
+                System.out.println(" ");
 
                 try {
                     sleep(TIMEOUT_RETRY_SECONDS * 1000);
@@ -62,7 +62,7 @@ public class ReplyThread extends Thread {
                if (currentTweet == null) {
                    currentTweet = tweet;
 
-                   Main.log("Found new tweet: \"" + tweet.getText() + "\"");
+                   Main.log("Logged latest tweet: \"" + tweet.getText() + "\"");
                    Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
                    System.out.println(" ");
                } else {
@@ -87,8 +87,8 @@ public class ReplyThread extends Thread {
             twitter.updateStatus(statusUpdate);
 
             Main.log("Reply sent to: " + handle);
-            Main.log("Tweet: \"" + tweet.getText() + "\"");
             Main.log("Reply: " + reply);
+            Main.log("Tweet: \"" + tweet.getText() + "\"");
             Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
             System.out.println(" ");
         } catch (TwitterException e) {
