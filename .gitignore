@@ -3,6 +3,3 @@
 Monitor.iml
 out
 target
-
-# Settings file
-src/main/resources/settings.json

@@ -2,6 +2,7 @@ package com.galanjulio.monitor.threads;
 
 import com.galanjulio.monitor.Main;
 import com.galanjulio.monitor.Monitor;
+import com.galanjulio.monitor.settings.ReplySettings;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.Twitter;
@@ -19,16 +20,18 @@ public class ReplyThread extends Thread {
 
     private Status currentTweet;
 
-    public ReplyThread(Monitor main) {
-        setName("Monitor - Reply Thread");
-
-        twitter = main.getTwitter();
-        handle = main.getString("handle_to_track");
-        reply = main.getString("tweet_reply");
+    public ReplyThread(Monitor main, ReplySettings settings) {
+        this.twitter = main.getTwitter();
+        this.handle = settings.getHandle();
+        this.reply = settings.getReply();
 
         if (handle.charAt(0) != '@') {
             handle = "@" + handle;
         }
+
+        setName("Monitor - " + handle + " Reply Thread");
+
+        Main.log("Successfully set up a new reply thread for " + handle);
     }
 
     @Override

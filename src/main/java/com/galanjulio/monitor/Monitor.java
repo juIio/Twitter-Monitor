@@ -1,5 +1,6 @@
 package com.galanjulio.monitor;
 
+import com.galanjulio.monitor.settings.ReplySettings;
 import com.galanjulio.monitor.threads.ReplyThread;
 import lombok.Getter;
 import org.json.simple.JSONObject;
@@ -18,11 +19,14 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 public class Monitor {
 
-    private static final boolean DEBUG_MODE = false;
+    private static final boolean GUI_ENABLED = false;
 
     private Map<String, Object> settings = new HashMap<>();
 
@@ -35,10 +39,9 @@ public class Monitor {
 
         setupSettings();
         setupTwitter();
-        startThread();
 
-        if (DEBUG_MODE) {
-            openDebugFrame();
+        if (GUI_ENABLED) {
+            openFrame();
         }
     }
 
@@ -72,7 +75,22 @@ public class Monitor {
         JSONObject jsonObject = (JSONObject) object;
 
         for (Object key : jsonObject.keySet()) {
-            settings.put(String.valueOf(key), jsonObject.get(key));
+            String keyAsString = String.valueOf(key);
+
+            if (keyAsString.equalsIgnoreCase("replies")) {
+                continue;
+            }
+
+            settings.put(keyAsString, jsonObject.get(key));
+        }
+
+        JSONObject replyList = (JSONObject) jsonObject.get("replies");
+        for (Object key : replyList.keySet()) {
+            String handle = String.valueOf(key);
+            String reply = String.valueOf(replyList.get(key));
+
+            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+            executorService.schedule(() -> new ReplyThread(Monitor.this, new ReplySettings(handle, reply)).start(), 1, TimeUnit.SECONDS);
         }
     }
 
@@ -88,7 +106,7 @@ public class Monitor {
         twitter = new TwitterFactory(config.build()).getInstance();
     }
 
-    private void openDebugFrame() {
+    private void openFrame() {
         JFrame frame = new JFrame(Main.TITLE + " - " + Main.VERSION);
 
         JTextArea textArea = new JTextArea(24, 80);
@@ -111,10 +129,6 @@ public class Monitor {
         frame.setVisible(true);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.toFront();
-    }
-
-    private void startThread() {
-        new ReplyThread(this).start();
     }
 
     public String getString(String setting) {
