@@ -3,3 +3,6 @@
 Monitor.iml
 out
 target
+
+# Settings file
+settings.json
