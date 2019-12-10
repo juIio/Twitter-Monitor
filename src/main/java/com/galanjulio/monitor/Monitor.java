@@ -1,6 +1,5 @@
 package com.galanjulio.monitor;
 
-import com.galanjulio.monitor.settings.ReplySettings;
 import com.galanjulio.monitor.threads.ReplyThread;
 import lombok.Getter;
 import org.json.simple.JSONObject;
@@ -85,13 +84,17 @@ public class Monitor {
         }
 
         JSONObject replyList = (JSONObject) jsonObject.get("replies");
+        Map<String, String> handlesAndReplies = new HashMap<>();
+
         for (Object key : replyList.keySet()) {
             String handle = String.valueOf(key);
             String reply = String.valueOf(replyList.get(key));
 
-            ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-            executorService.schedule(() -> new ReplyThread(Monitor.this, new ReplySettings(handle, reply)).start(), 1, TimeUnit.SECONDS);
+            handlesAndReplies.put(handle, reply);
         }
+
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+        executorService.schedule(() -> new ReplyThread(Monitor.this, handlesAndReplies).start(), 1, TimeUnit.SECONDS);
     }
 
     private void setupTwitter() {
