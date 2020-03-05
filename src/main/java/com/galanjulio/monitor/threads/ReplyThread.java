@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ReplyThread extends Thread {
 
-    private static final int TIMEOUT_RETRY_SECONDS = 15;
+    private static final int TIMEOUT_RETRY_SECONDS = 60;
 
     private Twitter twitter;
     private Map<String, String> handlesAndReplies;
@@ -82,7 +82,7 @@ public class ReplyThread extends Thread {
                     }
 
                     try {
-                        sleep(1000 * handlesAndReplies.size());
+                        sleep(2000 * handlesAndReplies.size());
                     } catch (InterruptedException ignored) {
                     }
                 }
