@@ -10,16 +10,17 @@ import twitter4j.TwitterException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class ReplyThread extends Thread {
 
     private static final int TIMEOUT_RETRY_SECONDS = 60;
 
     private Twitter twitter;
-    private Map<String, String> handlesAndReplies;
+    private TreeMap<String, String> handlesAndReplies;
     private Map<String, Status> currentTweets;
 
-    public ReplyThread(Monitor main, Map<String, String> handlesAndReplies) {
+    public ReplyThread(Monitor main, TreeMap<String, String> handlesAndReplies) {
         this.twitter = main.getTwitter();
         this.handlesAndReplies = handlesAndReplies;
         this.currentTweets = new HashMap<>();
@@ -72,7 +73,7 @@ public class ReplyThread extends Thread {
                     if (currentTweet == null) {
                         currentTweets.put(handle, tweet);
 
-                        Main.log("Logged latest tweet: \"" + tweet.getText() + "\"");
+                        Main.log("Logged latest tweet from " + handle + ":\"" + tweet.getText() + "\"");
                         Main.log("Link: https://twitter.com/" + handle.substring(1) + "/status/" + tweet.getId());
                         System.out.println(" ");
                     } else {

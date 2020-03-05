@@ -18,6 +18,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -84,7 +85,7 @@ public class Monitor {
         }
 
         JSONObject replyList = (JSONObject) jsonObject.get("replies");
-        Map<String, String> handlesAndReplies = new HashMap<>();
+        TreeMap<String, String> handlesAndReplies = new TreeMap<>();
 
         for (Object key : replyList.keySet()) {
             String handle = String.valueOf(key);
